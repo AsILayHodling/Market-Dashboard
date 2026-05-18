@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Market Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1>Market Dashboard</h1>
+    <span class="updated-at" id="updated-at">Loading&hellip;</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── Equities & Crypto ───────────────────────────────────────── -->
+  <section>
+    <h2 class="section-label">Equities &amp; Crypto</h2>
+    <div class="card-grid grid-4">
+
+      <div class="card">
+        <div class="card-meta">
+          <span class="card-name">Bitcoin</span>
+          <span class="card-symbol">BTC</span>
+        </div>
+        <div class="card-price" id="price-btc">—</div>
+        <div class="card-change" id="change-btc">—</div>
+        <div class="card-chart-wrap"><canvas id="chart-btc"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="card-meta">
+          <span class="card-name">S&amp;P 500</span>
+          <span class="card-symbol">SPX</span>
+        </div>
+        <div class="card-price" id="price-spx">—</div>
+        <div class="card-change" id="change-spx">—</div>
+        <div class="card-chart-wrap"><canvas id="chart-spx"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="card-meta">
+          <span class="card-name">Nasdaq 100</span>
+          <span class="card-symbol">NDX</span>
+        </div>
+        <div class="card-price" id="price-ndx">—</div>
+        <div class="card-change" id="change-ndx">—</div>
+        <div class="card-chart-wrap"><canvas id="chart-ndx"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="card-meta">
+          <span class="card-name">Dow Jones</span>
+          <span class="card-symbol">DJI</span>
+        </div>
+        <div class="card-price" id="price-dji">—</div>
+        <div class="card-change" id="change-dji">—</div>
+        <div class="card-chart-wrap"><canvas id="chart-dji"></canvas></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Commodities ────────────────────────────────────────────── -->
+  <section>
+    <h2 class="section-label">Commodities</h2>
+    <div class="card-grid grid-2">
+
+      <div class="card">
+        <div class="card-meta">
+          <span class="card-name">WTI Crude</span>
+          <span class="card-symbol">WTI</span>
+        </div>
+        <div class="card-price" id="price-wti">—</div>
+        <div class="card-change" id="change-wti">—</div>
+        <div class="card-chart-wrap"><canvas id="chart-wti"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="card-meta">
+          <span class="card-name">Brent Crude</span>
+          <span class="card-symbol">BRENT</span>
+        </div>
+        <div class="card-price" id="price-brent">—</div>
+        <div class="card-change" id="change-brent">—</div>
+        <div class="card-chart-wrap"><canvas id="chart-brent"></canvas></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Treasury Yields ────────────────────────────────────────── -->
+  <section>
+    <h2 class="section-label">U.S. Treasury Yields</h2>
+    <div class="card-grid grid-4">
+
+      <div class="card">
+        <div class="card-meta">
+          <span class="card-name">2-Year</span>
+          <span class="card-symbol">DGS2</span>
+        </div>
+        <div class="card-price treasury-rate" id="rate-2yr">—</div>
+        <div class="card-change" id="change-2yr">—</div>
+        <div class="card-chart-wrap"><canvas id="chart-2yr"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="card-meta">
+          <span class="card-name">5-Year</span>
+          <span class="card-symbol">DGS5</span>
+        </div>
+        <div class="card-price treasury-rate" id="rate-5yr">—</div>
+        <div class="card-change" id="change-5yr">—</div>
+        <div class="card-chart-wrap"><canvas id="chart-5yr"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="card-meta">
+          <span class="card-name">10-Year</span>
+          <span class="card-symbol">DGS10</span>
+        </div>
+        <div class="card-price treasury-rate" id="rate-10yr">—</div>
+        <div class="card-change" id="change-10yr">—</div>
+        <div class="card-chart-wrap"><canvas id="chart-10yr"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="card-meta">
+          <span class="card-name">30-Year</span>
+          <span class="card-symbol">DGS30</span>
+        </div>
+        <div class="card-price treasury-rate" id="rate-30yr">—</div>
+        <div class="card-change" id="change-30yr">—</div>
+        <div class="card-chart-wrap"><canvas id="chart-30yr"></canvas></div>
+      </div>
+
+    </div>
+
+    <div class="yield-curve-card">
+      <div class="yield-curve-title">Yield Curve (30-day history overlay coming soon — current snapshot)</div>
+      <canvas id="yield-curve"></canvas>
+    </div>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
