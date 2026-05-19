@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bitcoin — Market Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header>
+  <div class="detail-header-inner">
+    <a href="index.html" class="back-btn">&#8592; Dashboard</a>
+    <div class="detail-asset-title">
+      <span class="detail-asset-name">Bitcoin</span>
+      <span class="card-symbol">BTC</span>
+    </div>
+    <div class="detail-price-block">
+      <span class="detail-price" id="detail-price">—</span>
+      <span class="detail-change card-change" id="detail-change">—</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section>
+    <div class="timeframe-bar">
+      <button class="tf-btn active" data-days="1">1D</button>
+      <button class="tf-btn" data-days="7">7D</button>
+      <button class="tf-btn" data-days="30">30D</button>
+      <button class="tf-btn" data-days="90">3M</button>
+      <button class="tf-btn" data-days="180">6M</button>
+      <button class="tf-btn" data-days="365">1Y</button>
+      <button class="tf-btn" data-days="1825">5Y</button>
+      <button class="tf-btn" data-days="max">All</button>
+    </div>
+    <div class="detail-chart-wrap">
+      <div class="chart-loading" id="chart-loading">Loading…</div>
+      <canvas id="detail-chart"></canvas>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-label">Key Stats</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Market Cap</div>
+        <div class="stat-value" id="stat-mcap">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">24h Volume</div>
+        <div class="stat-value" id="stat-vol">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">24h High</div>
+        <div class="stat-value" id="stat-high">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">24h Low</div>
+        <div class="stat-value" id="stat-low">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">All-Time High</div>
+        <div class="stat-value" id="stat-ath">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Circulating Supply</div>
+        <div class="stat-value" id="stat-supply">—</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="btc.js"></script>
+</body>
+</html>
