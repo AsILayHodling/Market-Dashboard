@@ -1,5 +1,33 @@
 const charts = {};
 
+// Draws a vertical crosshair line on sparkline charts
+const crosshairPlugin = {
+  id: "crosshair",
+  afterDatasetsDraw(chart) {
+    if (chart._crosshairX == null) return;
+    const { ctx, chartArea: { top, bottom } } = chart;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(chart._crosshairX, top);
+    ctx.lineTo(chart._crosshairX, bottom);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#475569";
+    ctx.setLineDash([3, 3]);
+    ctx.stroke();
+    ctx.restore();
+  },
+  afterEvent(chart, args) {
+    const { event } = args;
+    const x = event.type === "mousemove" ? event.x : null;
+    if (chart._crosshairX !== x) {
+      chart._crosshairX = x;
+      args.changed = true;
+    }
+  },
+};
+
+Chart.register(crosshairPlugin);
+
 // ---------------------------------------------------------------------------
 // Formatting
 // ---------------------------------------------------------------------------
@@ -87,15 +115,27 @@ function sparkline(canvasId, data, isPositive, unit, symbol) {
           titleColor: "#64748b",
           titleFont: { size: 11 },
           bodyColor: "#e2e8f0",
-          bodyFont: { size: 12, weight: "600" },
+          bodyFont: { size: 13, weight: "600" },
           padding: 8,
+          caretSize: 4,
+          displayColors: false,
           callbacks: {
             label: ctx => fmtPrice(ctx.parsed.y, symbol, unit),
           },
         },
       },
       scales: {
-        x: { display: false },
+        x: {
+          display: true,
+          grid:   { display: false },
+          border: { display: false },
+          ticks: {
+            color: "#475569",
+            font:  { size: 9 },
+            maxTicksLimit: 4,
+            maxRotation: 0,
+          },
+        },
         y: { display: false },
       },
     },
