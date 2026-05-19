@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Market Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header>
+  <div class="detail-header-inner">
+    <a href="index.html" class="back-btn">&#8592; Dashboard</a>
+    <div class="detail-asset-title">
+      <span class="detail-asset-name" id="asset-name">—</span>
+      <span class="card-symbol" id="asset-symbol">—</span>
+    </div>
+    <div class="detail-price-block">
+      <span class="detail-price" id="detail-price">—</span>
+      <span class="detail-change card-change" id="detail-change">—</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section>
+    <div class="timeframe-bar">
+      <button class="tf-btn active" data-tf="1d">1D</button>
+      <button class="tf-btn" data-tf="7d">7D</button>
+      <button class="tf-btn" data-tf="30d">30D</button>
+      <button class="tf-btn" data-tf="3m">3M</button>
+      <button class="tf-btn" data-tf="6m">6M</button>
+      <button class="tf-btn" data-tf="1y">1Y</button>
+      <button class="tf-btn" data-tf="5y">5Y</button>
+      <button class="tf-btn" data-tf="max">All</button>
+    </div>
+    <div class="detail-chart-wrap">
+      <div class="chart-loading" id="chart-loading">Loading&hellip;</div>
+      <canvas id="detail-chart"></canvas>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-label">Key Stats</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Previous Close</div>
+        <div class="stat-value" id="stat-prev-close">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">52-Week High</div>
+        <div class="stat-value" id="stat-high-52w">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">52-Week Low</div>
+        <div class="stat-value" id="stat-low-52w">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Day High</div>
+        <div class="stat-value" id="stat-day-high">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Day Low</div>
+        <div class="stat-value" id="stat-day-low">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label" id="stat6-label">Volume</div>
+        <div class="stat-value" id="stat-vol">—</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="asset.js"></script>
+</body>
+</html>

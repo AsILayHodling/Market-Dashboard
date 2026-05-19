@@ -236,6 +236,66 @@ def fetch_yfinance(symbol, name, display_symbol, days=30, unit="$"):
         return None
 
 
+# ── Detail page JSON (all timeframes per asset) ──────────────────────────────
+
+DETAIL_TFS = [
+    ("1d",  "1d",  "5m"),
+    ("7d",  "5d",  "1h"),
+    ("30d", "1mo", "1d"),
+    ("3m",  "3mo", "1d"),
+    ("6m",  "6mo", "1d"),
+    ("1y",  "1y",  "1d"),
+    ("5y",  "5y",  "1wk"),
+    ("max", "max", "1mo"),
+]
+
+def write_detail_json(yf_symbol, key, name, display_symbol, unit):
+    print(f"  Detail: {name} ({yf_symbol})…")
+    try:
+        import yfinance as yf
+        t = yf.Ticker(yf_symbol)
+
+        try:
+            info = t.info
+        except Exception:
+            info = {}
+
+        stats = {
+            "prev_close": info.get("previousClose") or info.get("regularMarketPreviousClose"),
+            "high_52w":   info.get("fiftyTwoWeekHigh"),
+            "low_52w":    info.get("fiftyTwoWeekLow"),
+            "volume":     info.get("averageVolume") or info.get("volume"),
+            "market_cap": info.get("marketCap"),
+            "pe_ratio":   info.get("trailingPE"),
+        }
+
+        timeframes = {}
+        for tf_key, period, interval in DETAIL_TFS:
+            try:
+                hist = t.history(period=period, interval=interval)
+                if not hist.empty:
+                    timeframes[tf_key] = [
+                        [int(ts.timestamp() * 1000), round(float(c), 4)]
+                        for ts, c in zip(hist.index, hist["Close"])
+                    ]
+            except Exception as e:
+                print(f"    {tf_key}: {e}")
+
+        detail = {
+            "symbol":     display_symbol,
+            "name":       name,
+            "unit":       unit,
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "stats":      stats,
+            "timeframes": timeframes,
+        }
+        with open(f"data/{key}.json", "w") as f:
+            json.dump(detail, f)
+        print(f"    ✓  data/{key}.json")
+    except Exception as exc:
+        print(f"    ERROR {yf_symbol}: {exc}")
+
+
 # ── Persistence helper ───────────────────────────────────────────────────────
 
 def load_existing():
@@ -295,6 +355,20 @@ def main():
     with open("data/market.json", "w") as f:
         json.dump(output, f, indent=2)
     print("✓  Wrote data/market.json")
+
+    # Per-asset detail files for subpages
+    print("\nWriting detail JSONs…")
+    for yf_sym, key, name, disp_sym, unit in [
+        ("CEG",   "ceg",    "Constellation Energy", "CEG",    "$"),
+        ("^GSPC", "spx",    "S&P 500",              "SPX",    "pts"),
+        ("^NDX",  "ndx",    "Nasdaq 100",           "NDX",    "pts"),
+        ("^DJI",  "dji",    "Dow Jones",            "DJI",    "pts"),
+        ("GC=F",  "gold",   "Gold",                 "GOLD",   "$"),
+        ("SI=F",  "silver", "Silver",               "SILVER", "$"),
+        ("CL=F",  "wti",    "WTI Crude",            "WTI",    "$"),
+        ("BZ=F",  "brent",  "Brent Crude",          "BRENT",  "$"),
+    ]:
+        write_detail_json(yf_sym, key, name, disp_sym, unit)
 
 
 if __name__ == "__main__":
