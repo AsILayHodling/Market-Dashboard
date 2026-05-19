@@ -37,6 +37,7 @@ Chart.register(crosshairPlugin);
 
 function fmtPrice(price, unit) {
   if (price == null) return "—";
+  if (unit === "%")   return price.toFixed(2) + "%";
   if (unit === "pts") {
     return price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
@@ -54,12 +55,16 @@ function fmtVolume(n) {
   return n.toLocaleString("en-US");
 }
 
+function isIntradayTf(tf) {
+  return tf === "1d" && assetData && assetData.unit !== "%";
+}
+
 function fmtAxisLabel(ts, tf) {
   const d = new Date(ts);
-  if (tf === "1d") {
+  if (isIntradayTf(tf)) {
     return d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
   }
-  if (tf === "7d" || tf === "30d" || tf === "3m") {
+  if (tf === "1d" || tf === "7d" || tf === "30d" || tf === "3m") {
     return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   }
   return d.toLocaleDateString("en-US", { month: "short", year: "2-digit" });
@@ -67,7 +72,7 @@ function fmtAxisLabel(ts, tf) {
 
 function fmtTooltipTitle(ts, tf) {
   const d = new Date(ts);
-  if (tf === "1d") {
+  if (isIntradayTf(tf)) {
     return d.toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
   }
   return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
@@ -250,7 +255,9 @@ function updateHeader() {
   const prev   = tf30d.length > 1 ? tf30d[tf30d.length - 2][1] : null;
 
   if (latest != null) {
-    document.getElementById("detail-price").textContent = fmtPrice(latest, unit);
+    const priceEl = document.getElementById("detail-price");
+    priceEl.textContent = fmtPrice(latest, unit);
+    if (unit === "%") priceEl.classList.add("treasury-rate");
   }
   if (latest != null && prev != null) {
     const pct  = (latest - prev) / prev * 100;

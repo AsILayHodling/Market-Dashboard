@@ -342,6 +342,87 @@ def write_detail_json(yf_symbol, key, name, display_symbol, unit):
         print(f"    ERROR {yf_symbol}: {exc}")
 
 
+# ── Treasury detail page JSON ────────────────────────────────────────────────
+
+def write_treasury_detail_json(series_id, key, name, display_symbol):
+    """Fetch all FRED history in one call, then slice per timeframe."""
+    print(f"  Treasury detail: {name} ({series_id})…")
+    if not FRED_KEY:
+        print("  FRED_API_KEY not set — skipping.")
+        return
+    try:
+        data = get(
+            "https://api.stlouisfed.org/fred/series/observations",
+            {
+                "series_id": series_id,
+                "api_key":   FRED_KEY,
+                "file_type": "json",
+                "sort_order": "asc",
+            },
+            series_id,
+        )
+        if not data:
+            return
+
+        obs = data.get("observations", [])
+        all_pts = []
+        for o in obs:
+            if o.get("value") == ".":
+                continue
+            try:
+                dt = datetime.strptime(o["date"], "%Y-%m-%d").replace(tzinfo=timezone.utc)
+                all_pts.append((dt, round(float(o["value"]), 4)))
+            except Exception:
+                continue
+
+        if not all_pts:
+            print(f"    No valid data for {series_id}")
+            return
+
+        def to_ms(pts):
+            return [[int(dt.timestamp() * 1000), v] for dt, v in pts]
+
+        now = datetime.now(timezone.utc)
+
+        def since(days):
+            cutoff = now - timedelta(days=days)
+            return [(dt, v) for dt, v in all_pts if dt >= cutoff]
+
+        timeframes = {
+            "1d":  to_ms(since(7)),
+            "7d":  to_ms(since(14)),
+            "30d": to_ms(since(45)),
+            "3m":  to_ms(since(100)),
+            "6m":  to_ms(since(200)),
+            "1y":  to_ms(since(400)),
+            "5y":  to_ms(since(1900)),
+            "max": to_ms(all_pts),
+        }
+
+        vals1y = [v for _, v in since(400)]
+        stats = {
+            "prev_close": all_pts[-2][1] if len(all_pts) >= 2 else None,
+            "high_52w":   max(vals1y) if vals1y else None,
+            "low_52w":    min(vals1y) if vals1y else None,
+            "volume":     None,
+        }
+
+        detail = {
+            "symbol":     display_symbol,
+            "name":       name,
+            "unit":       "%",
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "stats":      stats,
+            "timeframes": timeframes,
+            "news":       [],
+        }
+        with open(f"data/{key}.json", "w") as f:
+            json.dump(detail, f)
+        print(f"    ✓  data/{key}.json ({len(all_pts)} observations)")
+    except Exception as exc:
+        print(f"    ERROR {series_id}: {exc}")
+
+
 # ── Persistence helper ───────────────────────────────────────────────────────
 
 def load_existing():
@@ -415,6 +496,16 @@ def main():
         ("BZ=F",  "brent",  "Brent Crude",          "BRENT",  "$"),
     ]:
         write_detail_json(yf_sym, key, name, disp_sym, unit)
+
+    # Treasury yield detail files for subpages
+    print("\nWriting treasury detail JSONs…")
+    for series, key, name, sym in [
+        ("DGS2",  "t2y",  "2-Year Treasury",  "2YR"),
+        ("DGS5",  "t5y",  "5-Year Treasury",  "5YR"),
+        ("DGS10", "t10y", "10-Year Treasury", "10YR"),
+        ("DGS30", "t30y", "30-Year Treasury", "30YR"),
+    ]:
+        write_treasury_detail_json(series, key, name, sym)
 
     # BTC news (separate file — BTC detail page fetches live from CoinGecko)
     print("\nBTC news (Yahoo Finance RSS)…")
