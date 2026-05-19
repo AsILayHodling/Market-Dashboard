@@ -261,21 +261,14 @@ def main():
     if btc:
         output["assets"]["btc"] = btc
 
-    # Equity indices — Massive
-    for ticker, name, sym, key in [
-        ("I:SPX", "S&P 500",    "SPX", "spx"),
-        ("I:NDX", "Nasdaq 100", "NDX", "ndx"),
-        ("I:DJI", "Dow Jones",  "DJI", "dji"),
-    ]:
-        result = fetch_massive_index(ticker, name, sym, unit="pts")
-        if result:
-            output["assets"][key] = result
-
-    # Stocks & spot commodities — yfinance (no key required)
+    # Indices, stocks & spot commodities — yfinance (no key required)
     for symbol, name, sym, key, unit in [
-        ("CEG",  "Constellation Energy", "CEG",    "ceg",    "$"),
-        ("GC=F", "Gold",                 "GOLD",   "gold",   "$"),
-        ("SI=F", "Silver",               "SILVER", "silver", "$"),
+        ("^GSPC", "S&P 500",              "SPX",    "spx",    "pts"),
+        ("^NDX",  "Nasdaq 100",           "NDX",    "ndx",    "pts"),
+        ("^DJI",  "Dow Jones",            "DJI",    "dji",    "pts"),
+        ("CEG",   "Constellation Energy", "CEG",    "ceg",    "$"),
+        ("GC=F",  "Gold",                 "GOLD",   "gold",   "$"),
+        ("SI=F",  "Silver",               "SILVER", "silver", "$"),
     ]:
         result = fetch_yfinance(symbol, name, sym, unit=unit)
         if result:
