@@ -454,6 +454,8 @@ def main():
         ("^NDX",  "Nasdaq 100",           "NDX",    "ndx",    "pts"),
         ("^DJI",  "Dow Jones",            "DJI",    "dji",    "pts"),
         ("CEG",   "Constellation Energy", "CEG",    "ceg",    "$"),
+        ("MSFT",  "Microsoft",            "MSFT",   "msft",   "$"),
+        ("ABBNY", "ABB Ltd",              "ABBNY",  "abbny",  "$"),
         ("GC=F",  "Gold",                 "GOLD",   "gold",   "$"),
         ("SI=F",  "Silver",               "SILVER", "silver", "$"),
     ]:
@@ -487,6 +489,8 @@ def main():
     print("\nWriting detail JSONs…")
     for yf_sym, key, name, disp_sym, unit in [
         ("CEG",   "ceg",    "Constellation Energy", "CEG",    "$"),
+        ("MSFT",  "msft",   "Microsoft",            "MSFT",   "$"),
+        ("ABBNY", "abbny",  "ABB Ltd",              "ABBNY",  "$"),
         ("^GSPC", "spx",    "S&P 500",              "SPX",    "pts"),
         ("^NDX",  "ndx",    "Nasdaq 100",           "NDX",    "pts"),
         ("^DJI",  "dji",    "Dow Jones",            "DJI",    "pts"),
