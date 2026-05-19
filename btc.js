@@ -213,6 +213,47 @@ async function loadStats() {
   }
 }
 
+// ── Performance scorecards ────────────────────────────────────────────────────
+
+function renderPerfCard(id, pct) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (pct === null) { el.textContent = "—"; return; }
+  const isPos = pct >= 0;
+  el.textContent = `${isPos ? "+" : ""}${pct.toFixed(2)}%`;
+  el.className   = `perf-value ${isPos ? "positive" : "negative"}`;
+}
+
+async function loadPerfCards() {
+  try {
+    const res = await fetch(
+      "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=365"
+    );
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const { prices } = await res.json();
+
+    const last = prices[prices.length - 1][1];
+
+    // 7D — price 7 days ago
+    const p7d  = prices[Math.max(0, prices.length - 8)][1];
+    // 30D — price 30 days ago
+    const p30d = prices[Math.max(0, prices.length - 31)][1];
+    // YoY — first price in the 365-day window
+    const p1y  = prices[0][1];
+    // YTD — first price on or after Jan 1
+    const jan1 = new Date(new Date().getFullYear(), 0, 1).getTime();
+    const ytdEntry = prices.find(p => p[0] >= jan1) || prices[0];
+    const pYtd = ytdEntry[1];
+
+    renderPerfCard("perf-7d",  (last - p7d)  / p7d  * 100);
+    renderPerfCard("perf-30d", (last - p30d) / p30d * 100);
+    renderPerfCard("perf-ytd", (last - pYtd) / pYtd * 100);
+    renderPerfCard("perf-1y",  (last - p1y)  / p1y  * 100);
+  } catch (err) {
+    console.error("Perf cards failed:", err);
+  }
+}
+
 // ── Init ──────────────────────────────────────────────────────────────────────
 
 document.querySelectorAll(".tf-btn").forEach(btn => {
@@ -220,4 +261,5 @@ document.querySelectorAll(".tf-btn").forEach(btn => {
 });
 
 loadStats();
+loadPerfCards();
 loadTimeframe(1);

@@ -172,6 +172,43 @@ function switchTimeframe(tf) {
   renderChart(prices, tf);
 }
 
+// ── Performance scorecards ────────────────────────────────────────────────────
+
+function pctChange(prices) {
+  if (!prices || prices.length < 2) return null;
+  const first = prices[0][1];
+  const last  = prices[prices.length - 1][1];
+  return (last - first) / first * 100;
+}
+
+function ytdChange(prices1y) {
+  if (!prices1y || prices1y.length < 2) return null;
+  const jan1 = new Date(new Date().getFullYear(), 0, 1).getTime();
+  const startEntry = prices1y.find(p => p[0] >= jan1) || prices1y[0];
+  const last = prices1y[prices1y.length - 1][1];
+  return (last - startEntry[1]) / startEntry[1] * 100;
+}
+
+function renderPerfCard(id, pct) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (pct === null) { el.textContent = "—"; return; }
+  const isPos = pct >= 0;
+  el.textContent  = `${isPos ? "+" : ""}${pct.toFixed(2)}%`;
+  el.className    = `perf-value ${isPos ? "positive" : "negative"}`;
+}
+
+function renderPerfCards() {
+  const tf7d = assetData.timeframes["7d"]  || [];
+  const tf30d = assetData.timeframes["30d"] || [];
+  const tf1y  = assetData.timeframes["1y"]  || [];
+
+  renderPerfCard("perf-7d",  pctChange(tf7d));
+  renderPerfCard("perf-30d", pctChange(tf30d));
+  renderPerfCard("perf-ytd", ytdChange(tf1y));
+  renderPerfCard("perf-1y",  pctChange(tf1y));
+}
+
 // ── Stats ─────────────────────────────────────────────────────────────────────
 
 function updateStats() {
@@ -240,6 +277,7 @@ async function init() {
     document.getElementById("asset-symbol").textContent = assetData.symbol;
 
     updateHeader();
+    renderPerfCards();
     updateStats();
     switchTimeframe("1d");
   } catch (err) {
