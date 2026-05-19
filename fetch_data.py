@@ -16,9 +16,11 @@ Rate limits:
 
 import json
 import os
+import re
 import time
 from datetime import date, datetime, timedelta, timezone
 
+import feedparser
 import requests
 
 # ── Config ──────────────────────────────────────────────────────────────────
@@ -236,6 +238,49 @@ def fetch_yfinance(symbol, name, display_symbol, days=30, unit="$"):
         return None
 
 
+# ── Yahoo Finance RSS — news ─────────────────────────────────────────────────
+
+def fetch_rss_news(yf_symbol, max_items=5):
+    """Fetch recent headlines from Yahoo Finance RSS for a given ticker."""
+    try:
+        url = (
+            "https://feeds.finance.yahoo.com/rss/2.0/headline"
+            f"?s={yf_symbol.replace('=', '%3D')}&region=US&lang=en-US"
+        )
+        feed = feedparser.parse(url)
+        items = []
+        cutoff = datetime.now(timezone.utc) - timedelta(days=7)
+        for entry in feed.entries:
+            if len(items) >= max_items:
+                break
+            try:
+                if not entry.get("published_parsed"):
+                    continue
+                pub = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
+                if pub < cutoff:
+                    continue
+                title = re.sub(r"<[^>]+>", "", entry.get("title", "")).strip()
+                if not title:
+                    continue
+                try:
+                    source = entry.source.title
+                except AttributeError:
+                    source = ""
+                items.append({
+                    "title":     title,
+                    "source":    source,
+                    "link":      entry.get("link", ""),
+                    "published": pub.isoformat(),
+                })
+            except Exception:
+                continue
+        print(f"  RSS {yf_symbol}: {len(items)} item(s)")
+        return items
+    except Exception as exc:
+        print(f"  RSS {yf_symbol} ERROR: {exc}")
+        return []
+
+
 # ── Detail page JSON (all timeframes per asset) ──────────────────────────────
 
 DETAIL_TFS = [
@@ -288,6 +333,7 @@ def write_detail_json(yf_symbol, key, name, display_symbol, unit):
             "updated_at": datetime.now(timezone.utc).isoformat(),
             "stats":      stats,
             "timeframes": timeframes,
+            "news":       fetch_rss_news(yf_symbol),
         }
         with open(f"data/{key}.json", "w") as f:
             json.dump(detail, f)
@@ -369,6 +415,13 @@ def main():
         ("BZ=F",  "brent",  "Brent Crude",          "BRENT",  "$"),
     ]:
         write_detail_json(yf_sym, key, name, disp_sym, unit)
+
+    # BTC news (separate file — BTC detail page fetches live from CoinGecko)
+    print("\nBTC news (Yahoo Finance RSS)…")
+    btc_news = fetch_rss_news("BTC-USD")
+    with open("data/btc-news.json", "w") as f:
+        json.dump(btc_news, f)
+    print(f"✓  Wrote data/btc-news.json ({len(btc_news)} item(s))")
 
 
 if __name__ == "__main__":

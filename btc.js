@@ -254,6 +254,53 @@ async function loadPerfCards() {
   }
 }
 
+// ── News ──────────────────────────────────────────────────────────────────────
+
+function relTime(iso) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 60)  return m + "m ago";
+  const h = Math.floor(m / 60);
+  if (h < 24)  return h + "h ago";
+  return Math.floor(h / 24) + "d ago";
+}
+
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function renderNews(items) {
+  if (!items || items.length === 0) return;
+  const section = document.getElementById("news-section");
+  const list    = document.getElementById("news-list");
+  list.innerHTML = items.map(item => {
+    const href = item.link && item.link.startsWith("http") ? item.link : "#";
+    return `<a class="news-item" href="${escHtml(href)}" target="_blank" rel="noopener noreferrer">
+      <div class="news-title">${escHtml(item.title)}</div>
+      <div class="news-meta">
+        <span class="news-source">${escHtml(item.source)}</span>
+        <span class="news-time">${relTime(item.published)}</span>
+      </div>
+    </a>`;
+  }).join("");
+  section.style.display = "";
+}
+
+async function loadBtcNews() {
+  try {
+    const res = await fetch(`data/btc-news.json?t=${Date.now()}`);
+    if (!res.ok) return;
+    const items = await res.json();
+    renderNews(items);
+  } catch (err) {
+    console.error("BTC news fetch failed:", err);
+  }
+}
+
 // ── Init ──────────────────────────────────────────────────────────────────────
 
 document.querySelectorAll(".tf-btn").forEach(btn => {
@@ -263,3 +310,4 @@ document.querySelectorAll(".tf-btn").forEach(btn => {
 loadStats();
 loadPerfCards();
 loadTimeframe(1);
+loadBtcNews();

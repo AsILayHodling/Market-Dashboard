@@ -365,6 +365,50 @@ main {
   font-variant-numeric: tabular-nums;
 }
 
+/* ── News feed ──────────────────────────────────────────────────────── */
+
+.news-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.news-item {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.news-item:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent)22;
+}
+
+.news-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.45;
+  margin-bottom: 0.45rem;
+}
+
+.news-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.news-source {
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
 /* ── Responsive ──────────────────────────────────────────────────── */
 
 @media (max-width: 1300px) {
