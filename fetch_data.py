@@ -201,6 +201,41 @@ def fetch_fred(series_id, label, days=30):
     }
 
 
+# ── Yahoo Finance — stocks & spot commodities ────────────────────────────────
+
+def fetch_yfinance(symbol, name, display_symbol, days=30, unit="$"):
+    """
+    Fetch daily price history via yfinance (Yahoo Finance).
+    Use plain ticker for stocks (e.g. 'CEG') and futures symbols for
+    commodities (e.g. 'GC=F' for gold spot, 'SI=F' for silver spot).
+    """
+    print(f"{name} ({symbol}, yfinance)…")
+    try:
+        import yfinance as yf
+        hist = yf.Ticker(symbol).history(period=f"{days + 15}d")
+        if hist.empty:
+            print(f"  No data returned for {symbol}")
+            return None
+        hist = hist.tail(days)
+        history = [round(float(p), 2) for p in hist["Close"].tolist()]
+        if not history:
+            return None
+        price      = history[-1]
+        prev       = history[-2] if len(history) >= 2 else price
+        change_pct = (price - prev) / prev * 100 if prev else 0
+        return {
+            "name":       name,
+            "symbol":     display_symbol,
+            "price":      price,
+            "change_pct": change_pct,
+            "history":    history,
+            "unit":       unit,
+        }
+    except Exception as exc:
+        print(f"  ERROR {symbol}: {exc}")
+        return None
+
+
 # ── Persistence helper ───────────────────────────────────────────────────────
 
 def load_existing():
@@ -226,16 +261,23 @@ def main():
     if btc:
         output["assets"]["btc"] = btc
 
-    # Equity indices, stocks, and commodity ETFs — Massive
-    for ticker, name, sym, key, unit in [
-        ("I:SPX", "S&P 500",              "SPX",    "spx",    "pts"),
-        ("I:NDX", "Nasdaq 100",           "NDX",    "ndx",    "pts"),
-        ("I:DJI", "Dow Jones",            "DJI",    "dji",    "pts"),
-        ("CEG",   "Constellation Energy", "CEG",    "ceg",    "$"),
-        ("GLD",   "Gold",                 "GOLD",   "gold",   "$"),
-        ("SLV",   "Silver",               "SILVER", "silver", "$"),
+    # Equity indices — Massive
+    for ticker, name, sym, key in [
+        ("I:SPX", "S&P 500",    "SPX", "spx"),
+        ("I:NDX", "Nasdaq 100", "NDX", "ndx"),
+        ("I:DJI", "Dow Jones",  "DJI", "dji"),
     ]:
-        result = fetch_massive_index(ticker, name, sym, unit=unit)
+        result = fetch_massive_index(ticker, name, sym, unit="pts")
+        if result:
+            output["assets"][key] = result
+
+    # Stocks & spot commodities — yfinance (no key required)
+    for symbol, name, sym, key, unit in [
+        ("CEG",  "Constellation Energy", "CEG",    "ceg",    "$"),
+        ("GC=F", "Gold",                 "GOLD",   "gold",   "$"),
+        ("SI=F", "Silver",               "SILVER", "silver", "$"),
+    ]:
+        result = fetch_yfinance(symbol, name, sym, unit=unit)
         if result:
             output["assets"][key] = result
 
