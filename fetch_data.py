@@ -84,10 +84,10 @@ def fetch_btc():
 
 # ── Massive — equity indices ─────────────────────────────────────────────────
 
-def fetch_massive_index(ticker, name, display_symbol, days=30):
+def fetch_massive_index(ticker, name, display_symbol, days=30, unit="pts"):
     """
-    Fetch 30 trading days of daily bars for an index from Massive.
-    ticker examples: "I:SPX", "I:NDX", "I:DJI"
+    Fetch 30 trading days of daily bars for any Massive-supported ticker.
+    Indices use "I:SPX" format; stocks/ETFs use plain ticker ("CEG", "GLD").
     """
     print(f"{name} ({ticker}, Massive)…")
     if not MASSIVE_KEY:
@@ -122,7 +122,7 @@ def fetch_massive_index(ticker, name, display_symbol, days=30):
         "price": price,
         "change_pct": change_pct,
         "history": history,
-        "unit": "pts",  # index points, not dollars
+        "unit": unit,
     }
 
 
@@ -226,13 +226,16 @@ def main():
     if btc:
         output["assets"]["btc"] = btc
 
-    # Equity indices — Massive (no sleep needed, generous rate limits)
-    for ticker, name, sym, key in [
-        ("I:SPX", "S&P 500",    "SPX", "spx"),
-        ("I:NDX", "Nasdaq 100", "NDX", "ndx"),
-        ("I:DJI", "Dow Jones",  "DJI", "dji"),
+    # Equity indices, stocks, and commodity ETFs — Massive
+    for ticker, name, sym, key, unit in [
+        ("I:SPX", "S&P 500",              "SPX",    "spx",    "pts"),
+        ("I:NDX", "Nasdaq 100",           "NDX",    "ndx",    "pts"),
+        ("I:DJI", "Dow Jones",            "DJI",    "dji",    "pts"),
+        ("CEG",   "Constellation Energy", "CEG",    "ceg",    "$"),
+        ("GLD",   "Gold",                 "GOLD",   "gold",   "$"),
+        ("SLV",   "Silver",               "SILVER", "silver", "$"),
     ]:
-        result = fetch_massive_index(ticker, name, sym)
+        result = fetch_massive_index(ticker, name, sym, unit=unit)
         if result:
             output["assets"][key] = result
 
