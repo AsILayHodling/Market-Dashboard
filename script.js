@@ -249,7 +249,7 @@ async function loadData() {
       });
 
     // Assets — keys must match fetch_data.py output keys
-    const assetKeys = ["btc", "spx", "ndx", "dji", "ceg", "msft", "abbny", "wti", "brent", "gold", "silver"];
+    const assetKeys = ["btc", "spx", "ndx", "dji", "ceg", "msft", "abbny", "fdgrx", "wti", "brent", "gold", "silver"];
     for (const key of assetKeys) {
       updateAssetCard(key, data.assets[key]);
     }

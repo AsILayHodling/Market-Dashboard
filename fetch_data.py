@@ -318,6 +318,10 @@ def write_detail_json(yf_symbol, key, name, display_symbol, unit):
         for tf_key, period, interval in DETAIL_TFS:
             try:
                 hist = t.history(period=period, interval=interval)
+                # Fallback for daily-only instruments (mutual funds, some OTC ADRs)
+                if hist.empty and interval != "1d":
+                    fb_period = "5d" if period == "1d" else period
+                    hist = t.history(period=fb_period, interval="1d")
                 if not hist.empty:
                     timeframes[tf_key] = [
                         [int(ts.timestamp() * 1000), round(float(c), 4)]
@@ -456,6 +460,7 @@ def main():
         ("CEG",   "Constellation Energy", "CEG",    "ceg",    "$"),
         ("MSFT",  "Microsoft",            "MSFT",   "msft",   "$"),
         ("ABBNY", "ABB Ltd",              "ABBNY",  "abbny",  "$"),
+        ("FDGRX", "Fidelity Growth Co.", "FDGRX",  "fdgrx",  "$"),
         ("GC=F",  "Gold",                 "GOLD",   "gold",   "$"),
         ("SI=F",  "Silver",               "SILVER", "silver", "$"),
     ]:
@@ -488,9 +493,10 @@ def main():
     # Per-asset detail files for subpages
     print("\nWriting detail JSONs…")
     for yf_sym, key, name, disp_sym, unit in [
-        ("CEG",   "ceg",    "Constellation Energy", "CEG",    "$"),
-        ("MSFT",  "msft",   "Microsoft",            "MSFT",   "$"),
-        ("ABBNY", "abbny",  "ABB Ltd",              "ABBNY",  "$"),
+        ("CEG",   "ceg",    "Constellation Energy",      "CEG",    "$"),
+        ("MSFT",  "msft",   "Microsoft",                "MSFT",   "$"),
+        ("ABBNY", "abbny",  "ABB Ltd",                  "ABBNY",  "$"),
+        ("FDGRX", "fdgrx",  "Fidelity Growth Company Fund", "FDGRX", "$"),
         ("^GSPC", "spx",    "S&P 500",              "SPX",    "pts"),
         ("^NDX",  "ndx",    "Nasdaq 100",           "NDX",    "pts"),
         ("^DJI",  "dji",    "Dow Jones",            "DJI",    "pts"),

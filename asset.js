@@ -56,7 +56,11 @@ function fmtVolume(n) {
 }
 
 function isIntradayTf(tf) {
-  return tf === "1d" && assetData && assetData.unit !== "%";
+  if (tf !== "1d" || !assetData) return false;
+  const pts = assetData.timeframes["1d"];
+  if (!pts || pts.length < 2) return false;
+  // Points less than 1 hour apart → intraday (stocks); otherwise daily (funds, etc.)
+  return (pts[1][0] - pts[0][0]) < 3_600_000;
 }
 
 function fmtAxisLabel(ts, tf) {
