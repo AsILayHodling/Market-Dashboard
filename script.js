@@ -5,17 +5,14 @@ const charts = {};
 // ---------------------------------------------------------------------------
 
 function fmtPrice(price, symbol, unit) {
+  if (unit === "%") return price.toFixed(2) + "%";
   if (unit === "pts") {
-    // Index points (SPX, NDX, DJI) — comma-separated, 2 decimals
     return price.toLocaleString("en-US", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
   }
-  if (symbol === "BTC") {
-    return "$" + Math.round(price).toLocaleString("en-US");
-  }
-  // Commodities and everything else
+  if (symbol === "BTC") return "$" + Math.round(price).toLocaleString("en-US");
   return "$" + price.toFixed(2);
 }
 
@@ -36,7 +33,17 @@ function fmtTreasuryChange(ppChange) {
 // Charts
 // ---------------------------------------------------------------------------
 
-function sparkline(canvasId, data, isPositive) {
+function dateLabels(count) {
+  const labels = [];
+  for (let i = count - 1; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    labels.push(d.toLocaleDateString("en-US", { month: "short", day: "numeric" }));
+  }
+  return labels;
+}
+
+function sparkline(canvasId, data, isPositive, unit, symbol) {
   const canvas = document.getElementById(canvasId);
   if (!canvas || !data || data.length < 2) return;
 
@@ -44,14 +51,14 @@ function sparkline(canvasId, data, isPositive) {
 
   const ctx   = canvas.getContext("2d");
   const color = isPositive ? "#22c55e" : "#ef4444";
-  const grad  = ctx.createLinearGradient(0, 0, 0, 58);
+  const grad  = ctx.createLinearGradient(0, 0, 0, 100);
   grad.addColorStop(0, color + "55");
   grad.addColorStop(1, color + "08");
 
   charts[canvasId] = new Chart(ctx, {
     type: "line",
     data: {
-      labels: data.map((_, i) => i),
+      labels: dateLabels(data.length),
       datasets: [{
         data,
         borderColor: color,
@@ -60,16 +67,32 @@ function sparkline(canvasId, data, isPositive) {
         fill: true,
         tension: 0.4,
         pointRadius: 0,
-        pointHoverRadius: 0,
+        pointHoverRadius: 4,
+        pointHoverBackgroundColor: color,
+        pointHoverBorderColor: "#0b0e18",
+        pointHoverBorderWidth: 2,
       }],
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       animation: false,
+      interaction: { mode: "index", intersect: false },
       plugins: {
         legend:  { display: false },
-        tooltip: { enabled: false },
+        tooltip: {
+          backgroundColor: "#1c2235",
+          borderColor: "#252d45",
+          borderWidth: 1,
+          titleColor: "#64748b",
+          titleFont: { size: 11 },
+          bodyColor: "#e2e8f0",
+          bodyFont: { size: 12, weight: "600" },
+          padding: 8,
+          callbacks: {
+            label: ctx => fmtPrice(ctx.parsed.y, symbol, unit),
+          },
+        },
       },
       scales: {
         x: { display: false },
@@ -151,7 +174,7 @@ function updateAssetCard(key, asset) {
   priceEl.textContent  = fmtPrice(asset.price, asset.symbol, asset.unit);
   changeEl.textContent = fmtChangePct(asset.change_pct);
   changeEl.className   = `card-change ${isPos ? "positive" : "negative"}`;
-  sparkline(`chart-${key}`, asset.history, isPos);
+  sparkline(`chart-${key}`, asset.history, isPos, asset.unit, asset.symbol);
 }
 
 function updateTreasuryCard(key, t) {
@@ -163,7 +186,7 @@ function updateTreasuryCard(key, t) {
   rateEl.textContent   = t.rate.toFixed(2) + "%";
   changeEl.textContent = fmtTreasuryChange(t.change);
   changeEl.className   = `card-change ${isPos ? "positive" : "negative"}`;
-  sparkline(`chart-${key}`, t.history, isPos);
+  sparkline(`chart-${key}`, t.history, isPos, "%", key);
 }
 
 // ---------------------------------------------------------------------------

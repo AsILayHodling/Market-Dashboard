@@ -150,8 +150,8 @@ main {
 
 .card-chart-wrap {
   position: relative;
-  height: 58px;
-  margin-top: 0.6rem;
+  height: 80px;
+  margin-top: 0.75rem;
 }
 
 .card-chart-wrap canvas {
