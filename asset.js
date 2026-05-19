@@ -60,7 +60,7 @@ function isIntradayTf(tf) {
   const pts = assetData.timeframes["1d"];
   if (!pts || pts.length < 2) return false;
   // Points less than 1 hour apart → intraday (stocks); otherwise daily (funds, etc.)
-  return (pts[1][0] - pts[0][0]) < 3_600_000;
+  return (pts[1][0] - pts[0][0]) < 3600000;
 }
 
 function fmtAxisLabel(ts, tf) {
@@ -326,7 +326,14 @@ async function init() {
     updateHeader();
     renderPerfCards();
     updateStats();
-    switchTimeframe("1d");
+
+    // Fall back to first timeframe that has data (mutual funds may lack intraday "1d")
+    const TF_ORDER = ["1d", "7d", "30d", "3m", "6m", "1y", "5y", "max"];
+    const startTf  = TF_ORDER.find(tf => {
+      const pts = assetData.timeframes[tf];
+      return pts && pts.length > 0;
+    }) || "1d";
+    switchTimeframe(startTf);
     renderNews(assetData.news || []);
   } catch (err) {
     console.error("Failed to load asset data:", err);
