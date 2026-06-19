@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-06-19T13:59:58.502536+00:00",
+  "updated_at": "2026-06-19T15:09:00.147316+00:00",
   "assets": {
     "btc": {
       "name": "Bitcoin",
       "symbol": "BTC",
-      "price": 63179,
-      "change_pct": -1.0592566940237849,
+      "price": 63138,
+      "change_pct": -0.7671220179924643,
       "history": [
         77459.94434557436,
         77546.33765297421,
@@ -37,15 +37,15 @@
         65598.9439666077,
         64422.57366477588,
         62900.22709317204,
-        63175.98074164291
+        63152.967895046226
       ],
       "unit": "$"
     },
     "spx": {
       "name": "S&P 500",
       "symbol": "SPX",
-      "price": NaN,
-      "change_pct": NaN,
+      "price": 7500.58,
+      "change_pct": 1.0846215010579312,
       "history": [
         7337.11,
         7398.93,
@@ -76,15 +76,15 @@
         7554.29,
         7511.35,
         7420.1,
-        NaN
+        7500.58
       ],
       "unit": "pts"
     },
     "ndx": {
       "name": "Nasdaq 100",
       "symbol": "NDX",
-      "price": NaN,
-      "change_pct": NaN,
+      "price": 30406.19,
+      "change_pct": 2.4779793029882695,
       "history": [
         28563.95,
         29234.99,
@@ -115,15 +115,15 @@
         30543.92,
         29968.13,
         29670.95,
-        NaN
+        30406.19
       ],
       "unit": "pts"
     },
     "dji": {
       "name": "Dow Jones",
       "symbol": "DJI",
-      "price": NaN,
-      "change_pct": NaN,
+      "price": 51564.7,
+      "change_pct": 0.1401173567826689,
       "history": [
         49596.97,
         49609.16,
@@ -154,7 +154,7 @@
         51671.03,
         51999.67,
         51492.55,
-        NaN
+        51564.7
       ],
       "unit": "pts"
     },
@@ -239,8 +239,8 @@
     "ceg": {
       "name": "Constellation Energy",
       "symbol": "CEG",
-      "price": NaN,
-      "change_pct": NaN,
+      "price": 274.06,
+      "change_pct": 2.578882359546351,
       "history": [
         310.8,
         303.16,
@@ -271,15 +271,15 @@
         262.35,
         268.0,
         267.17,
-        NaN
+        274.06
       ],
       "unit": "$"
     },
     "gold": {
       "name": "Gold",
       "symbol": "GOLD",
-      "price": 4174.9,
-      "change_pct": -1.164745152813634,
+      "price": 4166.3,
+      "change_pct": -1.3683388177363267,
       "history": [
         4720.4,
         4718.7,
@@ -310,15 +310,15 @@
         4330.9,
         4358.9,
         4224.1,
-        4174.9
+        4166.3
       ],
       "unit": "$"
     },
     "silver": {
       "name": "Silver",
       "symbol": "SILVER",
-      "price": 64.88,
-      "change_pct": -2.067924528301894,
+      "price": 64.68,
+      "change_pct": -2.3698113207547067,
       "history": [
         80.39,
         85.49,
@@ -349,15 +349,15 @@
         69.9,
         70.7,
         66.25,
-        64.88
+        64.68
       ],
       "unit": "$"
     },
     "msft": {
       "name": "Microsoft",
       "symbol": "MSFT",
-      "price": NaN,
-      "change_pct": NaN,
+      "price": 379.4,
+      "change_pct": 0.1293183077775599,
       "history": [
         419.86,
         414.22,
@@ -388,15 +388,15 @@
         399.76,
         393.83,
         378.91,
-        NaN
+        379.4
       ],
       "unit": "$"
     },
     "abbny": {
       "name": "ABB Ltd",
       "symbol": "ABBNY",
-      "price": NaN,
-      "change_pct": NaN,
+      "price": 108.47,
+      "change_pct": 2.678909503975765,
       "history": [
         103.08,
         106.5,
@@ -427,17 +427,16 @@
         103.9,
         105.44,
         105.64,
-        NaN
+        108.47
       ],
       "unit": "$"
     },
     "fdgrx": {
       "name": "Fidelity Growth Co.",
       "symbol": "FDGRX",
-      "price": 57.75,
-      "change_pct": -1.2651735339374286,
+      "price": 58.82,
+      "change_pct": 1.8528138528138531,
       "history": [
-        56.16,
         55.96,
         56.73,
         57.18,
@@ -466,7 +465,8 @@
         57.2,
         59.18,
         58.49,
-        57.75
+        57.75,
+        58.82
       ],
       "unit": "$"
     }
