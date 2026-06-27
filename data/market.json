@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-06-27T17:07:03.763493+00:00",
+  "updated_at": "2026-06-27T17:36:33.781955+00:00",
   "assets": {
     "btc": {
       "name": "Bitcoin",
       "symbol": "BTC",
-      "price": 60426,
-      "change_pct": 0.5478774220471087,
+      "price": 60470,
+      "change_pct": 0.9277360719558718,
       "history": [
         73539.84189606174,
         73382.71831425565,
@@ -37,15 +37,15 @@
         60908.995129015006,
         59712.618061582114,
         59981.83163422954,
-        60427.639953024576
+        60471.907474396525
       ],
       "unit": "$"
     },
     "spx": {
       "name": "S&P 500",
       "symbol": "SPX",
-      "price": NaN,
-      "change_pct": NaN,
+      "price": 7354.02,
+      "change_pct": -0.04716282319105219,
       "history": [
         7501.24,
         7408.5,
@@ -76,15 +76,15 @@
         7365.46,
         7358.22,
         7357.49,
-        NaN
+        7354.02
       ],
       "unit": "pts"
     },
     "ndx": {
       "name": "Nasdaq 100",
       "symbol": "NDX",
-      "price": NaN,
-      "change_pct": NaN,
+      "price": 29118.24,
+      "change_pct": -1.09400984771904,
       "history": [
         29580.3,
         29125.2,
@@ -115,15 +115,15 @@
         29347.27,
         29220.06,
         29440.32,
-        NaN
+        29118.24
       ],
       "unit": "pts"
     },
     "dji": {
       "name": "Dow Jones",
       "symbol": "DJI",
-      "price": NaN,
-      "change_pct": NaN,
+      "price": 51876.11,
+      "change_pct": -0.08572701943852372,
       "history": [
         50063.46,
         49526.17,
@@ -154,7 +154,7 @@
         51666.84,
         51848.9,
         51920.62,
-        NaN
+        51876.11
       ],
       "unit": "pts"
     },
@@ -239,8 +239,8 @@
     "ceg": {
       "name": "Constellation Energy",
       "symbol": "CEG",
-      "price": NaN,
-      "change_pct": NaN,
+      "price": 264.02,
+      "change_pct": -1.7380624511518912,
       "history": [
         274.83,
         267.2,
@@ -271,7 +271,7 @@
         270.26,
         267.97,
         268.69,
-        NaN
+        264.02
       ],
       "unit": "$"
     },
@@ -356,8 +356,8 @@
     "msft": {
       "name": "Microsoft",
       "symbol": "MSFT",
-      "price": NaN,
-      "change_pct": NaN,
+      "price": 372.97,
+      "change_pct": 5.708131394722684,
       "history": [
         408.55,
         421.01,
@@ -388,15 +388,15 @@
         373.94,
         365.46,
         352.83,
-        NaN
+        372.97
       ],
       "unit": "$"
     },
     "abbny": {
       "name": "ABB Ltd",
       "symbol": "ABBNY",
-      "price": NaN,
-      "change_pct": NaN,
+      "price": 103.9,
+      "change_pct": -2.8245417134305986,
       "history": [
         107.01,
         103.91,
@@ -427,17 +427,16 @@
         105.97,
         105.84,
         106.92,
-        NaN
+        103.9
       ],
       "unit": "$"
     },
     "fdgrx": {
       "name": "Fidelity Growth Co.",
       "symbol": "FDGRX",
-      "price": 56.82,
-      "change_pct": 0.15864621893178815,
+      "price": 56.72,
+      "change_pct": -0.17599436818022074,
       "history": [
-        57.52,
         58.21,
         57.15,
         56.53,
@@ -466,7 +465,8 @@
         58.2,
         56.85,
         56.73,
-        56.82
+        56.82,
+        56.72
       ],
       "unit": "$"
     }
